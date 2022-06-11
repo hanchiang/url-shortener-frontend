@@ -1,14 +1,51 @@
 .container {
-  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+}
+
+.overlayMessage {
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 2rem;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+
+  > p {
+    font-size: 3rem;
+    margin-top: 6rem;
+  }
+}
+
+.header {
+  .serverError {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    background-color: rgba(255, 0, 0, 0.15);
+    color: rgb(217, 16, 56);
+    font-size: 1.5rem;
+  }
 }
 
 .main {
-  margin-bottom: 6rem;
   display: flex;
-  min-height: 85vh;
+  height: 90vh;
+  padding: 5rem 1rem;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+
+  .title {
+    font-size: 1.5rem;
+  }
 
   > .form {
     display: flex;
@@ -46,6 +83,7 @@
   border-top: 1px solid #eaeaea;
   justify-content: center;
   align-items: center;
+  display: flex;
 
   > a {
     display: flex;

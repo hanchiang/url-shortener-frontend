@@ -5,8 +5,12 @@ import { useState } from 'react';
 
 import styles from '../styles/home.module.scss';
 
+const IS_PRODUCTION_READY =
+  process.env.NEXT_PUBLIC_IS_PRODUCTION_READY === 'true';
+const API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN;
+
 const shortenUrlRequest = (url: string, alias?: string) => {
-  const requestUrl = `${process.env.NEXT_PUBLIC_API_DOMAIN}/urls`;
+  const requestUrl = `${API_DOMAIN}/urls`;
   const requestBody: any = {
     url,
   };
@@ -35,6 +39,7 @@ const Home: NextPage = () => {
   const [url, setUrl] = useState('');
   const [alias, setAlias] = useState('');
   const [shortenedUrl, setShortenedUrl] = useState('');
+  const [serverError, setServerError] = useState('');
 
   const onChangeUrl = (event: React.FormEvent<HTMLInputElement>) => {
     setUrl(event.currentTarget.value);
@@ -45,7 +50,15 @@ const Home: NextPage = () => {
   };
 
   const clearShortenedUrl = () => {
-    setShortenedUrl('');
+    if (shortenedUrl) {
+      setShortenedUrl('');
+    }
+  };
+
+  const clearServerError = () => {
+    if (serverError) {
+      setServerError('');
+    }
   };
 
   const copyToClipboard = () => {
@@ -67,18 +80,45 @@ const Home: NextPage = () => {
     }
   };
 
+  const getErrorMessage = (e: any): string => {
+    if (e?.error?.message) {
+      return e.error.message;
+    }
+    return e?.message;
+  };
+
+  const isServerError = (msg: string): boolean => {
+    return msg?.toLowerCase().includes('failed to fetch');
+  };
+
+  const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code.toLowerCase() === 'enter') {
+      onSubmit();
+    }
+  };
+
   const onSubmit = () => {
     if (!url) {
       alert('Please enter a URL to be shortened');
       return;
     }
+    // Good idea for UI tests. Make sure various states gets set/cleared according to the response
     shortenUrlRequest(url, alias)
       .then(res => {
         setShortenedUrl(res.payload);
+        clearServerError();
       })
       .catch(e => {
-        clearShortenedUrl();
-        alert(e.error.message);
+        const errorMessage = getErrorMessage(e);
+
+        if (isServerError(errorMessage)) {
+          setServerError('Unable to establish connection to server');
+          clearShortenedUrl();
+        } else {
+          console.log(errorMessage);
+          clearServerError();
+          alert(errorMessage);
+        }
       });
   };
 
@@ -93,10 +133,21 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      {!IS_PRODUCTION_READY && (
+        <div className={styles.overlayMessage}>
+          <p>Coming soon. Stay tuned!</p>
+        </div>
+      )}
+
+      <header className={styles.header}>
+        {serverError && <div className={styles.serverError}>{serverError}</div>}
+      </header>
+
       <main className={styles.main}>
-        <p>
-          Enter a URL to be shortened(Include http/https), e.g.{' '}
-          <code>https://google.com</code>
+        <p className={styles.title}>
+          Enter a URL to be shortened(Include http/https)
+          <br />
+          e.g. <code>https://google.com</code>
         </p>
 
         <form className={styles.form}>
@@ -105,12 +156,14 @@ const Home: NextPage = () => {
             placeholder="Shorten a URL"
             onChange={onChangeUrl}
             value={url}
+            onKeyPress={onKeyPress}
           />
           <input
             type="text"
             placeholder="Optional alias"
             onChange={onChangeAlias}
             value={alias}
+            onKeyPress={onKeyPress}
           />
           <button
             type="button"
