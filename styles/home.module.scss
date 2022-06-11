@@ -1,0 +1,62 @@
+.container {
+  padding: 0 2rem;
+}
+
+.main {
+  margin-bottom: 6rem;
+  display: flex;
+  min-height: 85vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  > .form {
+    display: flex;
+    flex-direction: column;
+  
+    > input {
+      min-width: 250px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .submitButton {
+      padding: 10px 15px;
+    }
+  }
+
+  .shortenedUrlContainer {
+    display: flex;
+    margin-top: 30px;
+    align-items: center;
+
+    > p {
+      margin-right: 10px;
+    }
+
+    > button {
+      padding: 10px;
+    }
+  }
+}
+
+
+.footer {
+  padding: 2rem 0;
+  border-top: 1px solid #eaeaea;
+  justify-content: center;
+  align-items: center;
+
+  > a {
+    display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
+  }
+  .logo {
+    height: 1em;
+    margin-left: 0.5rem;
+  }
+}
+
+
