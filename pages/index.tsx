@@ -8,6 +8,8 @@ import styles from '../styles/home.module.scss';
 const IS_PRODUCTION_READY =
   process.env.NEXT_PUBLIC_IS_PRODUCTION_READY === 'true';
 const API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN;
+const NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS = process.env.NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS;
+const NEXT_PUBLIC_WEEKEND_OPERATING_HOURS = process.env.NEXT_PUBLIC_WEEKEND_OPERATING_HOURS;
 
 const shortenUrlRequest = (url: string, alias?: string) => {
   const requestUrl = `${API_DOMAIN}/urls`;
@@ -39,7 +41,7 @@ const Home: NextPage = () => {
   const [url, setUrl] = useState('');
   const [alias, setAlias] = useState('');
   const [shortenedUrl, setShortenedUrl] = useState('');
-  const [serverError, setServerError] = useState('');
+  const [serverConnectionError, setServerConnectionError] = useState('');
 
   const onChangeUrl = (event: React.FormEvent<HTMLInputElement>) => {
     setUrl(event.currentTarget.value);
@@ -56,8 +58,8 @@ const Home: NextPage = () => {
   };
 
   const clearServerError = () => {
-    if (serverError) {
-      setServerError('');
+    if (serverConnectionError) {
+      setServerConnectionError('');
     }
   };
 
@@ -87,7 +89,7 @@ const Home: NextPage = () => {
     return e?.message;
   };
 
-  const isServerError = (msg: string): boolean => {
+  const isServerConnectionError = (msg: string): boolean => {
     return msg?.toLowerCase().includes('failed to fetch');
   };
 
@@ -109,10 +111,11 @@ const Home: NextPage = () => {
         clearServerError();
       })
       .catch(e => {
+        console.log(e)
         const errorMessage = getErrorMessage(e);
 
-        if (isServerError(errorMessage)) {
-          setServerError('Unable to establish connection to server');
+        if (isServerConnectionError(errorMessage)) {
+          setServerConnectionError('Unable to establish connection to server');
           clearShortenedUrl();
         } else {
           console.log(errorMessage);
@@ -121,6 +124,8 @@ const Home: NextPage = () => {
         }
       });
   };
+
+  console.log(NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS)
 
   return (
     <div className={styles.container}>
@@ -140,7 +145,19 @@ const Home: NextPage = () => {
       )}
 
       <header className={styles.header}>
-        {serverError && <div className={styles.serverError}>{serverError}</div>}
+        <div className={styles.operatingHours}>
+          {NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS && (
+            <div className={styles.operatingHour}>Weekday operating hours: {NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS}</div>
+          )}
+          {NEXT_PUBLIC_WEEKEND_OPERATING_HOURS && (
+            <div className={styles.operatingHour}>Weekend operating hours: {NEXT_PUBLIC_WEEKEND_OPERATING_HOURS}</div>
+          )}
+          {NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS && NEXT_PUBLIC_WEEKEND_OPERATING_HOURS && (
+            <div className={styles.openIssue}>Too short?&nbsp;<a href="https://github.com/hanchiang/url-shortener-infra/issues" target="_blank" rel="noreferrer">Open an issue here</a></div>
+          )}
+        </div>
+        
+        {serverConnectionError && <div className={styles.serverConnectionError}>{serverConnectionError}</div>}
       </header>
 
       <main className={styles.main}>
