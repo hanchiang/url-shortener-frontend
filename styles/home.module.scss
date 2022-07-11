@@ -26,20 +26,37 @@
 }
 
 .header {
-  .serverError {
+  .operatingHours {
+    background-color: rgba(8, 119, 166, 0.3);
+  }
+  .operatingHour {
     display: flex;
     justify-content: center;
-    padding: 2rem;
+    padding: 0.5rem;
+    color: rgba(0, 0, 0);
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
+  .serverConnectionError {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem;
     background-color: rgba(255, 0, 0, 0.15);
     color: rgb(217, 16, 56);
     font-size: 1.5rem;
+  }
+  .openIssue {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1rem;
+    font-size: 1.2rem;
   }
 }
 
 .main {
   display: flex;
   height: 90vh;
-  padding: 5rem 1rem;
+  padding: 4rem 1rem;
   flex-direction: column;
   align-items: center;
 
