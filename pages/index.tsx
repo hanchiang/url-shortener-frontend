@@ -39,7 +39,7 @@ const Home: NextPage = () => {
   const [url, setUrl] = useState('');
   const [alias, setAlias] = useState('');
   const [shortenedUrl, setShortenedUrl] = useState('');
-  const [serverError, setServerError] = useState('');
+  const [serverConnectionError, setServerConnectionError] = useState('');
 
   const onChangeUrl = (event: React.FormEvent<HTMLInputElement>) => {
     setUrl(event.currentTarget.value);
@@ -56,8 +56,8 @@ const Home: NextPage = () => {
   };
 
   const clearServerError = () => {
-    if (serverError) {
-      setServerError('');
+    if (serverConnectionError) {
+      setServerConnectionError('');
     }
   };
 
@@ -87,7 +87,7 @@ const Home: NextPage = () => {
     return e?.message;
   };
 
-  const isServerError = (msg: string): boolean => {
+  const isServerConnectionError = (msg: string): boolean => {
     return msg?.toLowerCase().includes('failed to fetch');
   };
 
@@ -109,10 +109,11 @@ const Home: NextPage = () => {
         clearServerError();
       })
       .catch(e => {
+        console.log(e)
         const errorMessage = getErrorMessage(e);
 
-        if (isServerError(errorMessage)) {
-          setServerError('Unable to establish connection to server');
+        if (isServerConnectionError(errorMessage)) {
+          setServerConnectionError('Unable to establish connection to server');
           clearShortenedUrl();
         } else {
           console.log(errorMessage);
@@ -140,7 +141,7 @@ const Home: NextPage = () => {
       )}
 
       <header className={styles.header}>
-        {serverError && <div className={styles.serverError}>{serverError}</div>}
+        {serverConnectionError && <div className={styles.serverConnectionError}>{serverConnectionError}</div>}
       </header>
 
       <main className={styles.main}>
