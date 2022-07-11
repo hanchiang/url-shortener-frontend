@@ -125,8 +125,6 @@ const Home: NextPage = () => {
       });
   };
 
-  console.log(NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS)
-
   return (
     <div className={styles.container}>
       <Head>
@@ -194,9 +192,9 @@ const Home: NextPage = () => {
         {shortenedUrl && (
           <div className={styles.shortenedUrlContainer}>
             <p>
-              Shortened URL: <span id="shortened-url">{shortenedUrl}</span>
+              Shortened URL: <a href={shortenedUrl} id="shortened-url" target="_blank" rel="noreferrer">{shortenedUrl}</a>
             </p>
-            <button type="button" onClick={copyToClipboard}>
+            <button className={styles.copyClipboardButton} type="button" onClick={copyToClipboard}>
               Copy to clipboard
             </button>
           </div>
