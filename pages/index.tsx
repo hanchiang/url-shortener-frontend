@@ -202,15 +202,13 @@ const Home: NextPage = () => {
       </main>
 
       <footer className={styles.footer}>
+        <span>Made by&nbsp;</span>
         <a
-          href="https://vercel.com?utm_source=create-next-app&amp;utm_medium=default-template&amp;utm_campaign=create-next-app"
+          href="https://yaphc.com"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
+          yaphc.com 
         </a>
       </footer>
     </div>
