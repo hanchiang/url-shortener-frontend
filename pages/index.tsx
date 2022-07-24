@@ -8,8 +8,10 @@ import styles from '../styles/home.module.scss';
 const IS_PRODUCTION_READY =
   process.env.NEXT_PUBLIC_IS_PRODUCTION_READY === 'true';
 const API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN;
-const NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS = process.env.NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS;
-const NEXT_PUBLIC_WEEKEND_OPERATING_HOURS = process.env.NEXT_PUBLIC_WEEKEND_OPERATING_HOURS;
+const NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS =
+  process.env.NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS;
+const NEXT_PUBLIC_WEEKEND_OPERATING_HOURS =
+  process.env.NEXT_PUBLIC_WEEKEND_OPERATING_HOURS;
 
 const shortenUrlRequest = (url: string, alias?: string) => {
   const requestUrl = `${API_DOMAIN}/urls`;
@@ -42,6 +44,7 @@ const Home: NextPage = () => {
   const [alias, setAlias] = useState('');
   const [shortenedUrl, setShortenedUrl] = useState('');
   const [serverConnectionError, setServerConnectionError] = useState('');
+  const [isShortening, setIsShortening] = useState(false);
 
   const onChangeUrl = (event: React.FormEvent<HTMLInputElement>) => {
     setUrl(event.currentTarget.value);
@@ -104,6 +107,7 @@ const Home: NextPage = () => {
       alert('Please enter a URL to be shortened');
       return;
     }
+    setIsShortening(true);
     // Good idea for UI tests. Make sure various states gets set/cleared according to the response
     shortenUrlRequest(url, alias)
       .then(res => {
@@ -111,7 +115,7 @@ const Home: NextPage = () => {
         clearServerError();
       })
       .catch(e => {
-        console.log(e)
+        console.log(e);
         const errorMessage = getErrorMessage(e);
 
         if (isServerConnectionError(errorMessage)) {
@@ -122,6 +126,9 @@ const Home: NextPage = () => {
           clearServerError();
           alert(errorMessage);
         }
+      })
+      .finally(() => {
+        setIsShortening(false);
       });
   };
 
@@ -145,17 +152,35 @@ const Home: NextPage = () => {
       <header className={styles.header}>
         <div className={styles.operatingHours}>
           {NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS && (
-            <div className={styles.operatingHour}>Weekday operating hours: {NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS}</div>
+            <div className={styles.operatingHour}>
+              Weekday operating hours: {NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS}
+            </div>
           )}
           {NEXT_PUBLIC_WEEKEND_OPERATING_HOURS && (
-            <div className={styles.operatingHour}>Weekend operating hours: {NEXT_PUBLIC_WEEKEND_OPERATING_HOURS}</div>
+            <div className={styles.operatingHour}>
+              Weekend operating hours: {NEXT_PUBLIC_WEEKEND_OPERATING_HOURS}
+            </div>
           )}
-          {NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS && NEXT_PUBLIC_WEEKEND_OPERATING_HOURS && (
-            <div className={styles.openIssue}>Too short?&nbsp;<a href="https://github.com/hanchiang/url-shortener-infra/issues" target="_blank" rel="noreferrer">Open an issue here</a></div>
-          )}
+          {NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS &&
+            NEXT_PUBLIC_WEEKEND_OPERATING_HOURS && (
+              <div className={styles.openIssue}>
+                Too short?&nbsp;
+                <a
+                  href="https://github.com/hanchiang/url-shortener-infra/issues"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open an issue here
+                </a>
+              </div>
+            )}
         </div>
-        
-        {serverConnectionError && <div className={styles.serverConnectionError}>{serverConnectionError}</div>}
+
+        {serverConnectionError && (
+          <div className={styles.serverConnectionError}>
+            {serverConnectionError}
+          </div>
+        )}
       </header>
 
       <main className={styles.main}>
@@ -184,6 +209,7 @@ const Home: NextPage = () => {
             type="button"
             onClick={onSubmit}
             className={styles.submitButton}
+            disabled={isShortening}
           >
             Shorten URL
           </button>
@@ -192,9 +218,21 @@ const Home: NextPage = () => {
         {shortenedUrl && (
           <div className={styles.shortenedUrlContainer}>
             <p>
-              Shortened URL: <a href={shortenedUrl} id="shortened-url" target="_blank" rel="noreferrer">{shortenedUrl}</a>
+              Shortened URL:{' '}
+              <a
+                href={shortenedUrl}
+                id="shortened-url"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {shortenedUrl}
+              </a>
             </p>
-            <button className={styles.copyClipboardButton} type="button" onClick={copyToClipboard}>
+            <button
+              className={styles.copyClipboardButton}
+              type="button"
+              onClick={copyToClipboard}
+            >
               Copy to clipboard
             </button>
           </div>
@@ -203,12 +241,8 @@ const Home: NextPage = () => {
 
       <footer className={styles.footer}>
         <span>Made by&nbsp;</span>
-        <a
-          href="https://yaphc.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          yaphc.com 
+        <a href="https://yaphc.com" target="_blank" rel="noopener noreferrer">
+          yaphc.com
         </a>
       </footer>
     </div>
