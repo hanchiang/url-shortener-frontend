@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useState } from 'react';
+import githubIcon from '../images/GitHub-Mark-120px-plus.png'
 
 import styles from '../styles/home.module.scss';
 
@@ -184,6 +185,12 @@ const Home: NextPage = () => {
       </header>
 
       <main className={styles.main}>
+        <div className={styles.github}>
+          <a href="https://github.com/hanchiang" target="_blank" rel="noreferrer">
+            <Image src={githubIcon} alt="Github icon" width='50px' height="50px" />
+          </a>
+        </div>
+
         <p className={styles.title}>
           Enter a URL to be shortened(Include http/https)
           <br />
@@ -243,7 +250,7 @@ const Home: NextPage = () => {
         <span>Made by&nbsp;</span>
         <a href="https://yaphc.com" target="_blank" rel="noopener noreferrer">
           yaphc.com
-        </a>
+        </a>        
       </footer>
     </div>
   );

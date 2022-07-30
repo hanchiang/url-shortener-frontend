@@ -51,4 +51,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ![Shorten URL server connection error](images/shorten-url-server-connection-error.png)
 
 ## TODO
+* analytics
 * web3 stuff
