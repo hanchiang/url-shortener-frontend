@@ -162,19 +162,6 @@ const Home: NextPage = () => {
               Weekend operating hours: {NEXT_PUBLIC_WEEKEND_OPERATING_HOURS}
             </div>
           )}
-          {NEXT_PUBLIC_WEEKDAY_OPERATING_HOURS &&
-            NEXT_PUBLIC_WEEKEND_OPERATING_HOURS && (
-              <div className={styles.openIssue}>
-                Too short?&nbsp;
-                <a
-                  href="https://github.com/hanchiang/url-shortener-infra/issues"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Open an issue here
-                </a>
-              </div>
-            )}
         </div>
 
         {serverConnectionError && (
