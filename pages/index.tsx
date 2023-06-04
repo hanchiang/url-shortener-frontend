@@ -108,6 +108,9 @@ const Home: NextPage = () => {
       alert('Please enter a URL to be shortened');
       return;
     }
+    if (isShortening) {
+      return;
+    }
     setIsShortening(true);
     // Good idea for UI tests. Make sure various states gets set/cleared according to the response
     shortenUrlRequest(url, alias)
